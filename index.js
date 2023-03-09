@@ -62,6 +62,9 @@ const startRun = () => {
 const stopRun = () => {
     clearInterval(sender);
     const needed = sendCurrentTime();
+    if (needed === undefined) {
+        return;
+    }
     console.debug('Stop run at:', needed);
 
     [...clients.keys()].forEach((client) => {
