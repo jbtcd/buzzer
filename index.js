@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 80 });
+const wss = new WebSocket.Server({ port: 8002 });
 
 let current = false;
 let time, isRun, sender;
@@ -92,6 +92,6 @@ app.get('/start.mp3', (req, res) => {
     res.sendFile(__dirname + '/start.mp3');
 });
 
-http.listen(2702, function() {
+http.listen(8003, function() {
     console.debug('Server started.');
 });

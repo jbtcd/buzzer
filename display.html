@@ -31,7 +31,7 @@
         <audio src="start.mp3"></audio>
         <script type="application/javascript">
             const audio = document.querySelector('audio');
-            const socket = new WebSocket('ws://buzzer.ff-buetlingen.org:443');
+            const socket = new WebSocket('ws://websocket.ff-buetlingen.org');
             let sendGo = false;
 
             document.addEventListener('click', (e) => {
