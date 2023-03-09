@@ -1,0 +1,85 @@
+<html lang="de">
+    <head>
+        <title>Kuppelcontest Timer | Bütlingen</title>
+        <style>
+            html, body {
+                margin: 0;
+            }
+            body {
+                height: 100vh;
+                width: 100vw;
+                background-color: #1f1f1f;
+                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: monospace;
+            }
+            div {
+                display: flex;
+                font-size: 12rem;
+            }
+            span {
+                letter-spacing: 1px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <span>0:00.000</span>
+        </div>
+        <audio src="start.mp3"></audio>
+        <script type="application/javascript">
+            const audio = document.querySelector('audio');
+            const socket = new WebSocket('ws://buzzer.ff-buetlingen.org:443');
+            let sendGo = false;
+
+            document.addEventListener('click', (e) => {
+                if (!sendGo) {
+                    audio.play();
+                }
+            });
+            audio.addEventListener('timeupdate', (e) => {
+               if (e.target.currentTime >= 18.5) {
+                   if (!sendGo) {
+                       socket.send('Goooo!');
+                       sendGo = true;
+                   }
+               }
+
+            });
+            const time = document.querySelector('span');
+
+            const dd = (number, expectedLength) => {
+                let returnValue = '';
+                let numberString = '' + number;
+                let diff = expectedLength - numberString.length;
+
+                for(let i = 0; i < diff; i++) {
+                    returnValue = returnValue + '0';
+                }
+
+                return returnValue + number;
+            }
+
+            socket.onopen = () => {
+                socket.send('new display here');
+            }
+
+            socket.onmessage = (message) => {
+                if (message.data === 'new_start_possible') {
+                    sendGo = false;
+                    return;
+                }
+
+                const rawMilliseconds = message.data;
+
+                const milliseconds = Math.floor((rawMilliseconds) % 1000);
+                const seconds = Math.floor((rawMilliseconds / 1000) % 60);
+                const minutes = Math.floor((rawMilliseconds / 1000 / 60) % 60);
+
+                time.innerText = minutes + ':' + dd(seconds, 2) + '.' + dd(milliseconds, 3);
+            };
+        </script>
+    </body>
+</html>
