@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const wss = new WebSocket.Server(http);
+const wss = new WebSocket.Server({sender: http, path: '/wss'});
 
 let current = false;
 let time, isRun, sender;
