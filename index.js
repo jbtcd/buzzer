@@ -1,5 +1,8 @@
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8002 });
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const wss = new WebSocket.Server(http);
 
 let current = false;
 let time, isRun, sender;
@@ -82,10 +85,6 @@ const resetTimer = () => {
         client.send(0);
     });
 }
-
-const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/display.html');
